@@ -3,7 +3,7 @@
   sudo: yes
   command: systemctl daemon-reload
   notify:
-    - wait for marathon to listen
+    - restart marathon
 
 - name: restart marathon 
   sudo: yes
