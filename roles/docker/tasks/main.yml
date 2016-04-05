@@ -9,21 +9,29 @@
     - docker
     - bootstrap
 
+- name: enable yum repos
+  sudo: yes
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item }}"
+  with_items:
+    - docker.repo
+
 - name: install docker packages
   sudo: yes
   yum:
     name: "{{ item }}"
     state: present
   with_items:
-    - docker
-    - docker-selinux
+    - docker-engine
+    - docker-engine-selinux
   tags:
     - docker
     - bootstrap
 
 - name: check if docker storage already set up with devicemapper
   sudo: yes
-  shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup && echo ${STORAGE_DRIVER:-NOT_SET}"
+  shell: "test -f /etc/sysconfig/docker-storage-setup && . /etc/sysconfig/docker-storage-setup; echo ${STORAGE_DRIVER:-NOT_SET}"
   register: docker_storage_already_set_up
   tags:
     - disk
